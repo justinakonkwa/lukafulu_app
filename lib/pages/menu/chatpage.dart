@@ -8,6 +8,9 @@ import 'package:lukafulu/widgets/constantes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -217,13 +220,13 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             height: 200,
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               image: DecorationImage(
                                 image: AssetImage('assets/null_data2.png'),
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           AppText(
                               text: 'Aucune donnée',
                               textAlign: TextAlign.center),
@@ -236,43 +239,63 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (context, index) {
                             final incident = _incidents[index];
 
-                            // Récupérer la première catégorie, ou renvoyer "Catégorie non disponible" si elle n'existe pas
-                            String categoryTitle = (incident['categories'] !=
-                                        null &&
-                                    incident['categories'].isNotEmpty)
-                                ? incident['categories'][0]['category_title']
-                                : 'Catégorie non disponible';
+                            String incidentDate =
+                                incident['incident_date'] ?? '';
+                            String formattedDate = 'Date non disponible';
 
-                            return Container(
-                              height: 80,
-                              margin: const EdgeInsets.symmetric(vertical: 5.0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).highlightColor,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.grey,
-                                    ),
-                                    const Spacer(),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(incident['incident_title'] ??
-                                            'Titre non disponible'),
-                                        SizedBox(height: 10),
-                                        Text(
-                                            categoryTitle), // Affiche la première catégorie ou un message d'absence
-                                      ],
-                                    ),
-                                  ],
+                            if (incidentDate.isNotEmpty) {
+                              try {
+                                DateTime parsedDate =
+                                    DateTime.parse(incidentDate);
+                                formattedDate = DateFormat('dd-MM-yyyy à HH:mm')
+                                    .format(parsedDate);
+                              } catch (e) {
+                                print('Erreur de format de date: $e');
+                              }
+                            }
+
+                            return GestureDetector(
+                              onTap: () {
+                                showIncidentDetails(context, incident);
+                              },
+                              child: Container(
+                                height: 80,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).highlightColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15.0, right: 15.0),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.grey,
+                                        child: AppTextLarge(
+                                            text: incident['incident_title']
+                                                [0]),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AppText(
+                                              text:
+                                                  incident['incident_title'] ??
+                                                      'Titre non disponible'),
+                                          AppText(text: formattedDate),
+                                        ],
+                                      ),
+                                      Spacer(),
+                                      Icon(CupertinoIcons.arrow_right_circle),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -312,4 +335,174 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+void showIncidentDetails(BuildContext context, Map<String, dynamic> incident) {
+  showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      final String title = incident['incident_title'] ?? 'Titre non disponible';
+      final String description =
+          incident['incident_description'] ?? 'Description non disponible';
+      final String incidentDate = incident['incident_date'] != null
+          ? DateTime.parse(incident['incident_date'])
+              .toLocal()
+              .toString()
+              .split(' ')[0] // Formatage de la date
+          : 'Date non disponible';
+
+      // Récupération des catégories
+      final List<dynamic> categories = incident['categories'] ?? [];
+      // Récupération des nuisances
+      final List<dynamic> nuisances = incident['nuisances'] ?? [];
+      // Récupération des situations
+      final Map<String, dynamic> situations = incident['situations'] ?? {};
+
+      return Container(
+        padding: EdgeInsets.only(left: 15.0,right: 15.0,bottom: 30,top: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  height: 8.0,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: borderRadius,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppTextLarge(text: 'Detail Incident'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.cancel_outlined,
+                    color: Colors.red,
+                  ),
+                )
+              ],
+            ),
+
+            sizedbox,
+            sizedbox,
+            AppText(
+              text: title,
+            ),
+            SizedBox(height: 8),
+            SizedBox(height: 8),
+            Text(
+              'Date de l\'incident : $incidentDate',
+            ),
+            SizedBox(height: 16),
+            Row(
+
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: Icon(Icons.check_circle_outline),
+                  decoration: BoxDecoration(
+                    borderRadius: borderRadius,
+                    border: Border.all(
+                      color: Theme.of(context).highlightColor,
+                    ),
+                  ),
+                ),
+                sizedbox2,
+                AppTextLarge(text: 'Situations :',size: 16,),
+              ],
+            ),
+            if (situations.isNotEmpty) ...[
+              Text(
+                  '1. ${situations['form_response'] ?? 'Réponse non disponible'}'), // Numéroter la situation
+            ] else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Aucune situation disponible.'),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.cancel_outlined,
+                      color: Colors.red,
+                    ),
+                  )
+                ],
+              ),
+            ],
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: Icon(Icons.security),
+                  decoration: BoxDecoration(
+                    borderRadius: borderRadius,
+                    border: Border.all(
+                      color: Theme.of(context).highlightColor,
+                    ),
+                  ),
+                ),
+                sizedbox2,
+                AppTextLarge(text:'Catégories :',size: 16 ),
+              ],
+            ),
+            if (categories.isNotEmpty)
+              ...categories.asMap().entries.map((entry) {
+                int index = entry.key + 1; // Numéroter à partir de 1
+                var category = entry.value;
+                return Text(
+                    '$index. ${category['category_title'] ?? 'Catégorie non disponible'}');
+              }).toList()
+            else ...[
+              Text('Aucune catégorie disponible.'),
+            ],
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: Icon(Icons.local_florist_outlined),
+                  decoration: BoxDecoration(
+                    borderRadius: borderRadius,
+                    border: Border.all(
+                      color: Theme.of(context).highlightColor,
+                    ),
+                  ),
+                ),
+                sizedbox2,
+                AppTextLarge(text:'Nuisances :',size: 16,),
+              ],
+            ),
+            if (nuisances.isNotEmpty)
+              ...nuisances.asMap().entries.map((entry) {
+                int index = entry.key + 1; // Numéroter à partir de 1
+                var nuisance = entry.value;
+                return Text(
+                    '$index. ${nuisance['form_response'] ?? 'Nuisance non disponible'}');
+              }).toList()
+            else ...[
+              Text('Aucune nuisance disponible.'),
+            ],
+          ],
+        ),
+      );
+    },
+  );
 }
