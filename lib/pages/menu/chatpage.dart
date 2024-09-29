@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppTextLarge(
-                text: "LUKAFULU",
+                text: "Lukafulu.",
                 size: 45.0,
               ),
               SizedBox(height: 20),
