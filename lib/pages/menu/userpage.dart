@@ -377,7 +377,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
                     radius: 40,
                     backgroundColor: Colors.black12,
                     child: Icon(
-                      CupertinoIcons.tickets_fill,
+                      CupertinoIcons.person,
                       color: Colors.grey,
                       size: 40,
                     ),
@@ -390,7 +390,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
                   sizedbox,
                   NextButton(
                     height: 40,
-                    color: Colors.black,
+                    color: Theme.of(context).primaryColor,
                     width: 200,
                     onTap: () {
                       showModalBottomSheet(

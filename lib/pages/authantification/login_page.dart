@@ -188,7 +188,10 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: isLoading ? null : _loginUser,
                   child: isLoading
                       ? CupertinoActivityIndicator()
-                      : const Text("Se Connecter"),
+                      :  AppText(
+                    text:  translate("login.signup"),
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
 
                   color: Theme.of(context).primaryColor,
                 ),

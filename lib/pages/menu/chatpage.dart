@@ -330,7 +330,7 @@ class _HomePageState extends State<HomePage> {
               },
             );
           },
-          child: const Icon(CupertinoIcons.add_circled_solid),
+          child: const Icon(CupertinoIcons.add),
         ),
       ),
     );

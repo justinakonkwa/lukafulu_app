@@ -283,7 +283,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                       .onBackground,
                                 )
                               : AppText(
-                                  text: translate("login.signup"),
+                                  text: translate("login.signin"),
                                   color:
                                       Theme.of(context).colorScheme.onSecondary,
                                 ),
