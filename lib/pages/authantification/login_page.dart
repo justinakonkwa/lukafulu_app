@@ -7,6 +7,7 @@ import 'package:lukafulu/pages/authantification/signup_page.dart';
 import 'package:lukafulu/widgets/app_text.dart';
 import 'package:lukafulu/widgets/app_text_large.dart';
 import 'package:http/http.dart' as http;
+import 'package:lukafulu/widgets/bouton_next.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -92,22 +93,33 @@ class _LoginPageState extends State<LoginPage> {
       child: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Container(
+                  alignment: Alignment.center,
+                  height: 8,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
                 Row(
                   children: [
                     AppTextLarge(
-                      text: translate("connexion.login"),
+                      text:  translate("login.signup"),
                       color: Theme.of(context).colorScheme.onBackground,
                       size: 16,
                     ),
                     const Spacer(),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       icon: const Icon(
-                        Icons.logout,
+                        Icons.cancel_outlined,
                         color: Colors.red,
                         size: 30,
                       ),
@@ -136,50 +148,55 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                CupertinoTextField(
-                  controller: _passwordController,
-                  obscureText: !visibility,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  placeholder: 'Mot de passe',
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.secondary,
-                      width: 1.0,
+                Container(
+                  height: 40,
+                  child: CupertinoTextField(
+                    controller: _passwordController,
+                    obscureText: !visibility,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  prefix: const Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Icon(CupertinoIcons.lock_shield),
-                  ),
-                  suffix: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        visibility = !visibility;
-                      });
-                    },
-                    icon: Icon(
-                      visibility
-                          ? CupertinoIcons.eye
-                          : CupertinoIcons.eye_slash,
+                    placeholder: 'password',
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    prefix: const Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Icon(CupertinoIcons.lock_shield),
+                    ),
+                    suffix: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          visibility = !visibility;
+                        });
+                      },
+                      icon: Icon(
+                        visibility
+                            ? CupertinoIcons.eye
+                            : CupertinoIcons.eye_slash,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: isLoading ? null : _loginUser,
+                NextButton(
+                  onTap: isLoading ? null : _loginUser,
                   child: isLoading
                       ? CupertinoActivityIndicator()
                       : const Text("Se Connecter"),
+
+                  color: Theme.of(context).primaryColor,
                 ),
                 const SizedBox(height: 20),
                 Row(
                   children: [
                     AppText(
-                      text: translate("connexion.compte"),
+                      text: translate("login.notHaveAccount"),
                       color: Theme.of(context).colorScheme.onBackground,
                     ),
                     const Spacer(),
@@ -195,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       child: AppText(
-                        text: translate("connexion.signup"),
+                        text: translate("login.signin"),
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),

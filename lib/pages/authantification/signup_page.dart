@@ -130,7 +130,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    padding: const EdgeInsets.only(left: 20, right: 20,bottom: 20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -146,7 +146,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         Row(
                           children: [
                             AppTextLarge(
-                              text: translate("connexion.signup"),
+                              text: translate("login.signin"),
                               color: Theme.of(context).colorScheme.onBackground,
                               size: 16,
                             ),
@@ -156,7 +156,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 Navigator.pop(context);
                               },
                               icon: const Icon(
-                                Icons.close,
+                                Icons.cancel_outlined,
                                 color: Colors.red,
                                 size: 30,
                               ),
@@ -261,7 +261,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         sizedbox,
                         sizedbox,
                         NextButton(
-                          color: Colors.red,
+                          color: Theme.of(context).primaryColor,
                           width: double.maxFinite,
                           onTap: () {
                             if (_nameController.text.isNotEmpty &&
@@ -283,7 +283,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                       .onBackground,
                                 )
                               : AppText(
-                                  text: translate("connexion.signup"),
+                                  text: translate("login.signup"),
                                   color:
                                       Theme.of(context).colorScheme.onSecondary,
                                 ),
@@ -291,7 +291,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         Row(
                           children: [
                             AppText(
-                                text: translate("connexion.compte"),
+                                text: translate("login.alreadyHaveAccount"),
                                 color:
                                     Theme.of(context).colorScheme.onBackground),
                             const Spacer(),
@@ -307,7 +307,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 );
                               },
                               child: AppText(
-                                text: translate("connexion.login"),
+                                text: translate("login.signup"),
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                             )
